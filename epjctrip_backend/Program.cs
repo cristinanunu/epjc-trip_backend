@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<TripContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TripContext") ?? throw new InvalidOperationException("Connection string 'TripContext' not found.")));
 
 // Add services to the container.
 
