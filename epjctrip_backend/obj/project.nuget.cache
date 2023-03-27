@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "iQE4JWM8wafhno520aoO0ezPcbTh3cm1keA/XXTPsZjDlKqHMWrCbEHHyl5g1I4v+QlsGz+Rn60b23Pt37s1GQ==",
+  "dgSpecHash": "8AmVDWddXb/zVun/6l8ZdFHBqRGU2Ymg/gbNGMTNYIDVF+JdTJglxqwZOegXB3R8d4NwcEUaHiTggE/TGVpZdA==",
   "success": true,
-  "projectFilePath": "/Users/salt-dev/Desktop/epjctrip_backend/epjctrip_backend/epjctrip_backend.csproj",
+  "projectFilePath": "/Users/salt-dev/epjctrip/epjctrip_backend/epjctrip_backend/epjctrip_backend.csproj",
   "expectedPackageFiles": [
     "/Users/salt-dev/.nuget/packages/azure.core/1.24.0/azure.core.1.24.0.nupkg.sha512",
     "/Users/salt-dev/.nuget/packages/azure.identity/1.6.0/azure.identity.1.6.0.nupkg.sha512",

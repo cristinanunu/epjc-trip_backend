@@ -51,7 +51,7 @@ namespace epjctrip_backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PlanId")
+                    b.Property<int>("PlanId")
                         .HasColumnType("int");
 
                     b.Property<double?>("Price")
@@ -143,7 +143,9 @@ namespace epjctrip_backend.Migrations
                 {
                     b.HasOne("epjctrip_backend.Models.Plan", null)
                         .WithMany("Activities")
-                        .HasForeignKey("PlanId");
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("epjctrip_backend.Models.User", b =>

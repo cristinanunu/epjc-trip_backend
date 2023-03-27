@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace epjctrip_backend.Migrations
 {
     [DbContext(typeof(TripContext))]
-    [Migration("20230324150601_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230327101355_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,7 +54,7 @@ namespace epjctrip_backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PlanId")
+                    b.Property<int>("PlanId")
                         .HasColumnType("int");
 
                     b.Property<double?>("Price")
@@ -146,7 +146,9 @@ namespace epjctrip_backend.Migrations
                 {
                     b.HasOne("epjctrip_backend.Models.Plan", null)
                         .WithMany("Activities")
-                        .HasForeignKey("PlanId");
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("epjctrip_backend.Models.User", b =>

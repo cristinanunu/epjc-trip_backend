@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace epjctrip_backend.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,7 +47,7 @@ namespace epjctrip_backend.Migrations
                     Latitude = table.Column<float>(type: "real", nullable: true),
                     Longitude = table.Column<float>(type: "real", nullable: true),
                     ReviewsNumber = table.Column<int>(type: "int", nullable: false),
-                    PlanId = table.Column<int>(type: "int", nullable: true)
+                    PlanId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,7 +56,8 @@ namespace epjctrip_backend.Migrations
                         name: "FK_Activity_Plan_PlanId",
                         column: x => x.PlanId,
                         principalTable: "Plan",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
