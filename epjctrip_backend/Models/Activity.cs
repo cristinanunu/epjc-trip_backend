@@ -25,4 +25,6 @@ public class Activity
     public float? Longitude { get; set; }
     
     public int ReviewsNumber { get; set; }
+    
+    public int PlanId { get; set; }
 }

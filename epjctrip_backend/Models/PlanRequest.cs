@@ -1,9 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace epjctrip_backend.Models;
 
-public class Plan
+public class PlanRequest
 {
-    public int Id { get; set; }
-    
+    [Required]
     public string Name { get; set; }
     
     public DateTime StartDate { get; set; }

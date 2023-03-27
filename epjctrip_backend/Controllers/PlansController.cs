@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using epjctrip_backend.Models;
+using epjctrip_backend.Repositories;
 
 namespace epjctrip_backend.Controllers
 {
@@ -13,111 +14,114 @@ namespace epjctrip_backend.Controllers
     [ApiController]
     public class PlansController : ControllerBase
     {
-        private readonly TripContext _context;
+        private readonly IPlanRepository _planRepository;
 
-        public PlansController(TripContext context)
+        public PlansController(IPlanRepository planRepository)
         {
-            _context = context;
+            _planRepository = planRepository;
         }
 
         // GET: api/Plans
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Plan>>> GetPlan()
         {
-          if (_context.Plan == null)
-          {
-              return NotFound();
-          }
-            return await _context.Plan.ToListAsync();
+            if (_planRepository != null)
+            {
+                return await _planRepository.GetAll();
+            }
+
+            return NotFound();
         }
 
         // GET: api/Plans/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Plan>> GetPlan(int id)
         {
-          if (_context.Plan == null)
-          {
-              return NotFound();
-          }
-            var plan = await _context.Plan.FindAsync(id);
-
-            if (plan == null)
+            var planFromDb = await _planRepository.GetById(id);
+            if (planFromDb != null)
             {
-                return NotFound();
+                return planFromDb;
             }
 
-            return plan;
+            return NotFound();
         }
 
         // PUT: api/Plans/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlan(int id, Plan plan)
+        public async Task<ActionResult<Plan>> PutPlan(int id, PlanRequest plan)
         {
-            if (id != plan.Id)
+            var planFromDb = await _planRepository.GetById(id);
+            if (planFromDb == null)
             {
-                return BadRequest();
+                return NotFound();
             }
+            
+            planFromDb.Name = plan.Name;
+            planFromDb.StartDate = plan.StartDate;
+            planFromDb.EndDate = plan.EndDate;
+            planFromDb.Destionation = plan.Destionation;
+            planFromDb.Departure = plan.Departure;
+            planFromDb.Activities = plan.Activities;
+            planFromDb.Participants = plan.Participants;
+            planFromDb.Cost = plan.Cost;
 
-            _context.Entry(plan).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PlanExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            await _planRepository.UpdatePlan(planFromDb);
+            return planFromDb;
         }
 
         // POST: api/Plans
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Plan>> PostPlan(Plan plan)
+        public async Task<ActionResult<Plan>> PostPlan(PlanRequest plan)
         {
-          if (_context.Plan == null)
-          {
-              return Problem("Entity set 'TripContext.Plan'  is null.");
-          }
-            _context.Plan.Add(plan);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPlan", new { id = plan.Id }, plan);
+            var savedPlan = await _planRepository.Create(new Plan
+            {
+                Name = plan.Name,
+                StartDate = plan.StartDate,
+                EndDate = plan.EndDate,
+                Destionation = plan.Destionation,
+                Departure = plan.Departure,
+                Activities = plan.Activities,
+                Participants = plan.Participants,
+                Cost = plan.Cost
+            });
+            
+            var actionName = nameof(GetPlan);
+            var routeValue = new { id = savedPlan.Id };
+            return CreatedAtAction(actionName, routeValue, savedPlan);
         }
 
         // DELETE: api/Plans/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlan(int id)
         {
-            if (_context.Plan == null)
-            {
-                return NotFound();
-            }
-            var plan = await _context.Plan.FindAsync(id);
-            if (plan == null)
-            {
-                return NotFound();
-            }
+            // if (_context.Plan == null)
+            // {
+            //     return NotFound();
+            // }
+            //
+            // var plan = await _context.Plan.FindAsync(id);
+            // if (plan == null)
+            // {
+            //     return NotFound();
+            // }
+            //
+            // _context.Plan.Remove(plan);
+            // await _context.SaveChangesAsync();
+            //
+            // return NoContent();
 
-            _context.Plan.Remove(plan);
-            await _context.SaveChangesAsync();
-
+            // var plan = await GetPlan(id);
+            // if (plan == null)
+            // {
+            //     return NotFound();
+            // }
+            _planRepository.Delete(id);
             return NoContent();
         }
 
-        private bool PlanExists(int id)
-        {
-            return (_context.Plan?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+        // private bool PlanExists(int id)
+        // {
+        //     return (_context.Plan?.Any(e => e.Id == id)).GetValueOrDefault();
+        // }
     }
 }
