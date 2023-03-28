@@ -56,7 +56,7 @@ namespace epjctrip_backend.Controllers
         //     return await _context.User.ToListAsync();
         // }
         //
-        // // GET: api/Users/5
+        // GET: api/Users/5
         // [HttpGet("{id}")]
         // public async Task<ActionResult<User>> GetUser(int id)
         // {
@@ -118,7 +118,7 @@ namespace epjctrip_backend.Controllers
             }
             
             var token = GenerateJwtToken(user);
-            return Ok(new { token });
+            return Ok(new { token, user.Id, user.Name, user.Email, user.Password });
         }
 
         // // DELETE: api/Users/5
