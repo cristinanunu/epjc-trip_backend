@@ -59,7 +59,7 @@ namespace epjctrip_backend.Controllers
             planFromDb.Name = plan.Name;
             planFromDb.StartDate = plan.StartDate;
             planFromDb.EndDate = plan.EndDate;
-            planFromDb.Destionation = plan.Destionation;
+            planFromDb.Destination = plan.Destination;
             planFromDb.Departure = plan.Departure;
             planFromDb.Activities = plan.Activities;
             planFromDb.Participants = plan.Participants;
@@ -78,7 +78,7 @@ namespace epjctrip_backend.Controllers
                 Name = plan.Name,
                 StartDate = plan.StartDate,
                 EndDate = plan.EndDate,
-                Destionation = plan.Destionation,
+                Destination = plan.Destination,
                 Departure = plan.Departure,
                 Activities = plan.Activities,
                 Participants = plan.Participants,
@@ -118,10 +118,5 @@ namespace epjctrip_backend.Controllers
             _planRepository.Delete(id);
             return NoContent();
         }
-
-        // private bool PlanExists(int id)
-        // {
-        //     return (_context.Plan?.Any(e => e.Id == id)).GetValueOrDefault();
-        // }
     }
 }

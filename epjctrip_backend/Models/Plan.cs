@@ -10,7 +10,7 @@ public class Plan
     
     public DateTime EndDate { get; set; }
     
-    public string Destionation { get; set; }
+    public string Destination { get; set; }
     
     public string? Departure { get; set; }
     
