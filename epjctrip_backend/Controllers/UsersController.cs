@@ -1,15 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using DefaultNamespace;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using epjctrip_backend.Models;
+using epjctrip_backend.Repositories;
 using Microsoft.IdentityModel.Tokens;
 
 namespace epjctrip_backend.Controllers
@@ -18,15 +13,15 @@ namespace epjctrip_backend.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly TripContext _context;
+        private readonly IUserRepository _userRepository;
         private readonly IConfiguration _config;
 
-        public UsersController(IConfiguration config, TripContext context)
+        public UsersController(IConfiguration config, IUserRepository userRepository)
         {
-            _context = context;
+            _userRepository = userRepository;
             _config = config;
         }
-        
+
         private string GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -39,111 +34,50 @@ namespace epjctrip_backend.Controllers
                     new Claim(ClaimTypes.Email, user.Email),
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
 
-        // // GET: api/Users
-        // [HttpGet]
-        // public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-        // {
-        //   if (_context.User == null)
-        //   {
-        //       return NotFound();
-        //   }
-        //     return await _context.User.ToListAsync();
-        // }
-        //
-        // GET: api/Users/5
-        // [HttpGet("{id}")]
-        // public async Task<ActionResult<User>> GetUser(int id)
-        // {
-        //   if (_context.User == null)
-        //   {
-        //       return NotFound();
-        //   }
-        //     var user = await _context.User.FindAsync(id);
-        //
-        //     if (user == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //
-        //     return user;
-        // }
-
-        // // PUT: api/Users/5
-        // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        // [HttpPut("{id}")]
-        // public async Task<IActionResult> PutUser(int id, User user)
-        // {
-        //     if (id != user.Id)
-        //     {
-        //         return BadRequest();
-        //     }
-        //
-        //     _context.Entry(user).State = EntityState.Modified;
-        //
-        //     try
-        //     {
-        //         await _context.SaveChangesAsync();
-        //     }
-        //     catch (DbUpdateConcurrencyException)
-        //     {
-        //         if (!UserExists(id))
-        //         {
-        //             return NotFound();
-        //         }
-        //         else
-        //         {
-        //             throw;
-        //         }
-        //     }
-        //
-        //     return NoContent();
-        // }
-        
-        [HttpPost]
-        public async Task<ActionResult<User>> Login(LoginRequest login)
+        [HttpGet("{id}")]
+        public Task<ActionResult<User>> GetUser(int id)
         {
+            var user = _userRepository.GetOne(id).Result.Value;
 
-            var user = _context.User.FirstOrDefaultAsync(user =>
-                user.Email == login.Email && user.Password == login.Password).Result;
-            
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-            
-            var token = GenerateJwtToken(user);
-            return Ok(new { token, user.Id, user.Name, user.Email, user.Password });
+            return user == null
+                ? Task.FromResult<ActionResult<User>>(NotFound())
+                : Task.FromResult<ActionResult<User>>(user);
         }
 
-        // // DELETE: api/Users/5
-        // [HttpDelete("{id}")]
-        // public async Task<IActionResult> DeleteUser(int id)
-        // {
-        //     if (_context.User == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     var user = await _context.User.FindAsync(id);
-        //     if (user == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //
-        //     _context.User.Remove(user);
-        //     await _context.SaveChangesAsync();
-        //
-        //     return NoContent();
-        // }
-        //
-        // private bool UserExists(int id)
-        // {
-        //     return (_context.User?.Any(e => e.Id == id)).GetValueOrDefault();
-        // }
+        [HttpPost("/login")]
+        public Task<ActionResult<User>> Login(LoginRequest login)
+        {
+            var user = _userRepository.Login(login).Result;
+
+            if (user == null)
+            {
+                return Task.FromResult<ActionResult<User>>(Unauthorized());
+            }
+
+            var token = GenerateJwtToken(user);
+            return Task.FromResult<ActionResult<User>>(Ok(new { token, user.Id, user.Name, user.Email }));
+        }
+
+        [HttpPost("/register")]
+        public async Task<ActionResult<User>> Register(RegisterRequest request)
+        {
+            var newUser = await _userRepository.Create(new User
+            {
+                Name = request.Name,
+                Email = request.Email,
+                Password = request.Password
+            });
+
+            var actionName = nameof(GetUser);
+            var routeValue = new { id = newUser.Id };
+            return CreatedAtAction(actionName, routeValue, newUser);
+        }
     }
 }
