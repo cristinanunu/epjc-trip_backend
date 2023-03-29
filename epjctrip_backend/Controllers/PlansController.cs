@@ -15,7 +15,7 @@ namespace epjctrip_backend.Controllers
     public class PlansController : ControllerBase
     {
         private readonly IPlanRepository _planRepository;
-
+        
         public PlansController(IPlanRepository planRepository)
         {
             _planRepository = planRepository;
@@ -45,6 +45,26 @@ namespace epjctrip_backend.Controllers
 
             return NotFound();
         }
+        
+        // POST: api/Plans
+        [HttpPost]
+        public async Task<ActionResult<Plan>> PostPlan(PlanRequest plan)
+        {
+            var savedPlan = await _planRepository.Create(new Plan
+            {
+                Name = plan.Name,
+                StartDate = plan.StartDate,
+                EndDate = plan.EndDate,
+                Destination = plan.Destination,
+                Departure = plan.Departure,
+                Participants = plan.Participants,
+                Cost = plan.Cost
+            });
+            
+            var actionName = nameof(GetPlan);
+            var routeValue = new { id = savedPlan.Id };
+            return CreatedAtAction(actionName, routeValue, savedPlan);
+        }
 
         // PUT: api/Plans/5
         [HttpPut("{id}")]
@@ -61,7 +81,6 @@ namespace epjctrip_backend.Controllers
             planFromDb.EndDate = plan.EndDate;
             planFromDb.Destination = plan.Destination;
             planFromDb.Departure = plan.Departure;
-            planFromDb.Activities = plan.Activities;
             planFromDb.Participants = plan.Participants;
             planFromDb.Cost = plan.Cost;
 
@@ -69,26 +88,20 @@ namespace epjctrip_backend.Controllers
             return planFromDb;
         }
 
-        // POST: api/Plans
-        [HttpPost]
-        public async Task<ActionResult<Plan>> PostPlan(PlanRequest plan)
-        {
-            var savedPlan = await _planRepository.Create(new Plan
-            {
-                Name = plan.Name,
-                StartDate = plan.StartDate,
-                EndDate = plan.EndDate,
-                Destination = plan.Destination,
-                Departure = plan.Departure,
-                Activities = plan.Activities,
-                Participants = plan.Participants,
-                Cost = plan.Cost
-            });
-            
-            var actionName = nameof(GetPlan);
-            var routeValue = new { id = savedPlan.Id };
-            return CreatedAtAction(actionName, routeValue, savedPlan);
-        }
+        // [HttpPut("{id}/activities")]
+        // public async Task<ActionResult<Plan>> AddActivitiesToPlan(int id, Activity activity)
+        // {
+        //     var planFromDb = await _planRepository.GetById(id);
+        //     if (planFromDb == null)
+        //     {
+        //         return NotFound();
+        //     }
+        //     planFromDb.Activities.Add(activity);
+        //     await _planRepository.UpdatePlan(planFromDb);
+        //     return planFromDb;
+        // }
+
+        
 
         // DELETE: api/Plans/5
         [HttpDelete("{id}")]

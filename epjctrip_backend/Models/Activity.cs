@@ -21,4 +21,6 @@ public class Activity
     public int ReviewsNumber { get; set; }
     
     public string City { get; set; }
+    
+    public int PlanId { get; set; }
 }
