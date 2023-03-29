@@ -7,6 +7,7 @@ builder.Services.AddDbContext<TripContext>(options =>
 
 // Add services to the container.
 builder.Services.AddScoped<IPlanRepository, PlanRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
