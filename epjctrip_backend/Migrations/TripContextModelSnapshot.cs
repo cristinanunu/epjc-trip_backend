@@ -69,7 +69,7 @@ namespace epjctrip_backend.Migrations
 
                     b.HasIndex("PlanId");
 
-                    b.ToTable("Activity");
+                    b.ToTable("Activity", (string)null);
                 });
 
             modelBuilder.Entity("epjctrip_backend.Models.Plan", b =>
@@ -108,7 +108,7 @@ namespace epjctrip_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Plan");
+                    b.ToTable("Plan", (string)null);
                 });
 
             modelBuilder.Entity("epjctrip_backend.Models.User", b =>
@@ -133,7 +133,7 @@ namespace epjctrip_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("epjctrip_backend.Models.Activity", b =>

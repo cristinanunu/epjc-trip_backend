@@ -22,7 +22,8 @@ public class PlanRepository : IPlanRepository
 
     public async Task<Plan> GetById(int id)
     {
-        return await _dbTripContext.Plan.Include(plan => plan.Activities).FirstAsync();
+        // return await _dbTripContext.Plan.Include(plan => plan.Activities).FirstAsync();
+        return await _dbTripContext.Plan.Include(plan => plan.Activities).FirstOrDefaultAsync(plan => plan.Id == id);
     }
 
     public async Task<Plan> Create(Plan plan)
