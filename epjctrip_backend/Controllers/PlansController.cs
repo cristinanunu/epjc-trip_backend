@@ -58,7 +58,8 @@ namespace epjctrip_backend.Controllers
                 Destination = plan.Destination,
                 Departure = plan.Departure,
                 Participants = plan.Participants,
-                Cost = plan.Cost
+                Cost = plan.Cost,
+                UserId = plan.UserId
             });
             
             var actionName = nameof(GetPlan);

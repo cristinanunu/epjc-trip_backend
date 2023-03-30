@@ -18,4 +18,6 @@ public class PlanRequest
     public int Participants { get; set; }
     
     public int? Cost { get; set; } 
+    
+    public int UserId { get; set; }
 }
