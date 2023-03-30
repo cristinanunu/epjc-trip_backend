@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace epjctrip_backend.Migrations
 {
     [DbContext(typeof(TripContext))]
-    partial class TripContextModelSnapshot : ModelSnapshot
+    [Migration("20230330125715_PutModelsBackInModels")]
+    partial class PutModelsBackInModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,7 +72,7 @@ namespace epjctrip_backend.Migrations
 
                     b.HasIndex("PlanId");
 
-                    b.ToTable("Activity", (string)null);
+                    b.ToTable("Activity");
                 });
 
             modelBuilder.Entity("epjctrip_backend.Models.Plan", b =>
@@ -108,12 +111,10 @@ namespace epjctrip_backend.Migrations
 
                     b.HasKey("Id");
 
-
                     b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("Plan");
-
                 });
 
             modelBuilder.Entity("epjctrip_backend.Models.User", b =>
@@ -138,7 +139,7 @@ namespace epjctrip_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("epjctrip_backend.Models.Activity", b =>

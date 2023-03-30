@@ -13,8 +13,8 @@ using epjctrip_backend.Models;
         }
 
         public DbSet<epjctrip_backend.Models.Plan> Plan { get; set; } = default!;
-
+        
         public DbSet<epjctrip_backend.Models.Activity> Activity { get; set; } = default!;
-
+        
         public DbSet<epjctrip_backend.Models.User> User { get; set; } = default!;
     }
