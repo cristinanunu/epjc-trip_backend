@@ -48,6 +48,11 @@ public class PlanRepository : IPlanRepository
             return;
         }
 
+        foreach (var activity in _dbTripContext.Activity.Where(activity => activity.PlanId == id))
+        {
+            _dbTripContext.Activity.Remove(activity);
+        }
+        
         _dbTripContext.Plan.Remove(plan);
         _dbTripContext.SaveChanges();
     }
