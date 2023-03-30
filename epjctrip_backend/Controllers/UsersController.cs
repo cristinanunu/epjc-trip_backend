@@ -62,7 +62,7 @@ namespace epjctrip_backend.Controllers
             }
 
             var token = GenerateJwtToken(user);
-            return Task.FromResult<ActionResult<User>>(Ok(new { token, user.Id, user.Name, user.Email }));
+            return Task.FromResult<ActionResult<User>>(Ok(new { token, user.Id, user.Name, user.Email, user.Plan }));
         }
 
         [HttpPost("/register")]
