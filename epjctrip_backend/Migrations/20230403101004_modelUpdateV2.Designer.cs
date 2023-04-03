@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace epjctrip_backend.Migrations
 {
     [DbContext(typeof(TripContext))]
-    partial class TripContextModelSnapshot : ModelSnapshot
+    [Migration("20230403101004_modelUpdateV2")]
+    partial class modelUpdateV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,20 +45,25 @@ namespace epjctrip_backend.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Latitude")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Likes")
+                        .HasColumnType("int");
 
                     b.Property<string>("Link")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Longitude")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PlanId")
+                    b.Property<int?>("PlanId")
                         .HasColumnType("int");
 
                     b.Property<string>("Ranking")
@@ -63,9 +71,6 @@ namespace epjctrip_backend.Migrations
 
                     b.Property<double?>("Rating")
                         .HasColumnType("float");
-
-                    b.Property<int>("ReviewsNumber")
-                        .HasColumnType("int");
 
                     b.Property<string>("Street")
                         .IsRequired()
@@ -86,15 +91,25 @@ namespace epjctrip_backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AccommodationType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Budget")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CarbonFootPrint")
+                        .HasColumnType("int");
+
                     b.Property<string>("Departure")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Destination")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Duration")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -103,18 +118,13 @@ namespace epjctrip_backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Participants")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("Transport")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Plan");
                 });
@@ -144,32 +154,52 @@ namespace epjctrip_backend.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("epjctrip_backend.Models.UserPlan", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlanId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "PlanId");
+
+                    b.HasIndex("PlanId");
+
+                    b.ToTable("UserPlans");
+                });
+
             modelBuilder.Entity("epjctrip_backend.Models.Activity", b =>
                 {
                     b.HasOne("epjctrip_backend.Models.Plan", null)
                         .WithMany("Activities")
+                        .HasForeignKey("PlanId");
+                });
+
+            modelBuilder.Entity("epjctrip_backend.Models.UserPlan", b =>
+                {
+                    b.HasOne("epjctrip_backend.Models.Plan", "Plan")
+                        .WithMany("Participants")
                         .HasForeignKey("PlanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
 
-            modelBuilder.Entity("epjctrip_backend.Models.Plan", b =>
-                {
-                    b.HasOne("epjctrip_backend.Models.User", null)
-                        .WithMany("Plans")
+                    b.HasOne("epjctrip_backend.Models.User", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Plan");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("epjctrip_backend.Models.Plan", b =>
                 {
                     b.Navigation("Activities");
-                });
 
-            modelBuilder.Entity("epjctrip_backend.Models.User", b =>
-                {
-                    b.Navigation("Plans");
+                    b.Navigation("Participants");
                 });
 #pragma warning restore 612, 618
         }

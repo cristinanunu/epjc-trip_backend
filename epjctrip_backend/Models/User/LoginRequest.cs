@@ -1,4 +1,4 @@
-namespace DefaultNamespace;
+namespace epjctrip_backend.Models;
 
 public class LoginRequest
 {

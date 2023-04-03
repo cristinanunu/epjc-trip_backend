@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using DefaultNamespace;
 using Microsoft.AspNetCore.Mvc;
 using epjctrip_backend.Models;
 using epjctrip_backend.Repositories;
@@ -62,11 +61,11 @@ namespace epjctrip_backend.Controllers
             }
 
             var token = GenerateJwtToken(user);
-            return Task.FromResult<ActionResult<User>>(Ok(new { token, user.Id, user.Name, user.Email, user.Plan }));
+            return Task.FromResult<ActionResult<User>>(Ok(new { token, user.Id, user.Name, user.Email, }));
         }
 
         [HttpPost("/register")]
-        public async Task<ActionResult<User>> Register(RegisterRequest request)
+        public async Task<ActionResult<User>> Register(CreateUserRequest request)
         {
             var newUser = await _userRepository.Create(new User
             {

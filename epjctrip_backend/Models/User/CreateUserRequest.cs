@@ -1,6 +1,6 @@
 namespace epjctrip_backend.Models;
 
-public class RegisterRequest
+public class CreateUserRequest
 {
     public string Name { get; set; }
     
