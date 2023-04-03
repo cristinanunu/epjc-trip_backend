@@ -10,5 +10,5 @@ public class User
     
     public string Password { get; set; }
     
-    public Plan? Plan { get; set; }
+    public List<Plan> Plans { get; set; }
 }

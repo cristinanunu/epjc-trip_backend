@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using epjctrip_backend.Models;
 using epjctrip_backend.Repositories;
 
@@ -48,17 +42,18 @@ namespace epjctrip_backend.Controllers
         
         // POST: api/Plans
         [HttpPost]
-        public async Task<ActionResult<Plan>> PostPlan(PlanRequest plan)
+        public async Task<ActionResult<Plan>> PostPlan(CreatePlanRequest plan)
         {
             var savedPlan = await _planRepository.Create(new Plan
             {
+                Id = 0,
                 Name = plan.Name,
                 StartDate = plan.StartDate,
                 EndDate = plan.EndDate,
                 Destination = plan.Destination,
                 Departure = plan.Departure,
+                Activities = null,
                 Participants = plan.Participants,
-                Cost = plan.Cost,
                 UserId = plan.UserId
             });
             
@@ -69,21 +64,20 @@ namespace epjctrip_backend.Controllers
 
         // PUT: api/Plans/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<Plan>> PutPlan(int id, PlanRequest plan)
+        public async Task<ActionResult<Plan>> PutPlan(int id, UpdatePlanRequest plan)
         {
             var planFromDb = await _planRepository.GetById(id);
             if (planFromDb == null)
             {
                 return NotFound();
             }
-            
+
             planFromDb.Name = plan.Name;
             planFromDb.StartDate = plan.StartDate;
             planFromDb.EndDate = plan.EndDate;
             planFromDb.Destination = plan.Destination;
             planFromDb.Departure = plan.Departure;
             planFromDb.Participants = plan.Participants;
-            planFromDb.Cost = plan.Cost;
 
             await _planRepository.UpdatePlan(planFromDb);
             return planFromDb;

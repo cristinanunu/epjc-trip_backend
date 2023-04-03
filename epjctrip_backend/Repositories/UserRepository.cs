@@ -1,4 +1,3 @@
-using DefaultNamespace;
 using epjctrip_backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +22,7 @@ public class UserRepository : IUserRepository
 
     public async Task<ActionResult<User>> GetOne(int id)
     {
-        return await _userContext.User.FindAsync(id);
+        return await _userContext.User.Include(user => user.Plans).FirstOrDefaultAsync(user => user.Id == id);
     }
 
     public Task<User?> Login(LoginRequest request)

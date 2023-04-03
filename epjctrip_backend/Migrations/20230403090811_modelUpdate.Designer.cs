@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace epjctrip_backend.Migrations
 {
     [DbContext(typeof(TripContext))]
-    partial class TripContextModelSnapshot : ModelSnapshot
+    [Migration("20230403090811_modelUpdate")]
+    partial class modelUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,6 +23,21 @@ namespace epjctrip_backend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ActivityPlan", b =>
+                {
+                    b.Property<int>("ActivitiesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlansId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ActivitiesId", "PlansId");
+
+                    b.HasIndex("PlansId");
+
+                    b.ToTable("ActivityPlan");
+                });
 
             modelBuilder.Entity("epjctrip_backend.Models.Activity", b =>
                 {
@@ -42,21 +60,23 @@ namespace epjctrip_backend.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Latitude")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Likes")
+                        .HasColumnType("int");
 
                     b.Property<string>("Link")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Longitude")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PlanId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Ranking")
                         .HasColumnType("nvarchar(max)");
@@ -64,16 +84,11 @@ namespace epjctrip_backend.Migrations
                     b.Property<double?>("Rating")
                         .HasColumnType("float");
 
-                    b.Property<int>("ReviewsNumber")
-                        .HasColumnType("int");
-
                     b.Property<string>("Street")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PlanId");
 
                     b.ToTable("Activity");
                 });
@@ -86,15 +101,25 @@ namespace epjctrip_backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AccommodationType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Budget")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CarbonFootPrint")
+                        .HasColumnType("int");
+
                     b.Property<string>("Departure")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Destination")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Duration")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -103,18 +128,13 @@ namespace epjctrip_backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Participants")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("Transport")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Plan");
                 });
@@ -139,37 +159,43 @@ namespace epjctrip_backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PlanId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("PlanId");
 
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("epjctrip_backend.Models.Activity", b =>
+            modelBuilder.Entity("ActivityPlan", b =>
                 {
+                    b.HasOne("epjctrip_backend.Models.Activity", null)
+                        .WithMany()
+                        .HasForeignKey("ActivitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("epjctrip_backend.Models.Plan", null)
-                        .WithMany("Activities")
-                        .HasForeignKey("PlanId")
+                        .WithMany()
+                        .HasForeignKey("PlansId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("epjctrip_backend.Models.Plan", b =>
-                {
-                    b.HasOne("epjctrip_backend.Models.User", null)
-                        .WithMany("Plans")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("epjctrip_backend.Models.Plan", b =>
-                {
-                    b.Navigation("Activities");
                 });
 
             modelBuilder.Entity("epjctrip_backend.Models.User", b =>
                 {
-                    b.Navigation("Plans");
+                    b.HasOne("epjctrip_backend.Models.Plan", "Plan")
+                        .WithMany("Participants")
+                        .HasForeignKey("PlanId");
+
+                    b.Navigation("Plan");
+                });
+
+            modelBuilder.Entity("epjctrip_backend.Models.Plan", b =>
+                {
+                    b.Navigation("Participants");
                 });
 #pragma warning restore 612, 618
         }

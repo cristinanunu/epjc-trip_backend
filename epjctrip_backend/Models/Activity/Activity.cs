@@ -11,10 +11,14 @@ public class Activity
     public string Link { get; set; }
     
     public string ImageUrl { get; set; }
+
+    public double? Rating{ get; set; }
     
-    public double? Price { get; set; }
+    public string? Ranking { get; set; }
     
-    public double? Rating{ get; set; }   
+    public string? Longitude { get; set; }
+    
+    public string? Latitude { get; set; }
     
     public string Street { get; set; }
 
