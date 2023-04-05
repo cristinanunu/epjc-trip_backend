@@ -54,6 +54,7 @@ namespace epjctrip_backend.Controllers
                 Departure = plan.Departure,
                 Activities = null,
                 Participants = plan.Participants,
+                Budget = plan.Budget,
                 UserId = plan.UserId
             });
             
@@ -78,6 +79,7 @@ namespace epjctrip_backend.Controllers
             planFromDb.Destination = plan.Destination;
             planFromDb.Departure = plan.Departure;
             planFromDb.Participants = plan.Participants;
+            planFromDb.Budget = plan.Budget;
 
             await _planRepository.UpdatePlan(planFromDb);
             return planFromDb;
