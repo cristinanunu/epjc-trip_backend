@@ -80,51 +80,20 @@ namespace epjctrip_backend.Controllers
             planFromDb.Departure = plan.Departure;
             planFromDb.Participants = plan.Participants;
             planFromDb.Budget = plan.Budget;
+            planFromDb.TotalCo2E = plan.TotalCo2E;
+            planFromDb.TransportType = plan.TransportType;
+            planFromDb.TransportCo2E = plan.TransportCo2E;
+            planFromDb.AccommodationType = plan.AccommodationType;
+            planFromDb.AccommodationCo2E = plan.AccommodationCo2E;
 
             await _planRepository.UpdatePlan(planFromDb);
             return planFromDb;
         }
 
-        // [HttpPut("{id}/activities")]
-        // public async Task<ActionResult<Plan>> AddActivitiesToPlan(int id, Activity activity)
-        // {
-        //     var planFromDb = await _planRepository.GetById(id);
-        //     if (planFromDb == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     planFromDb.Activities.Add(activity);
-        //     await _planRepository.UpdatePlan(planFromDb);
-        //     return planFromDb;
-        // }
-
-        
-
         // DELETE: api/Plans/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePlan(int id)
+        public IActionResult DeletePlan(int id)
         {
-            // if (_context.Plan == null)
-            // {
-            //     return NotFound();
-            // }
-            //
-            // var plan = await _context.Plan.FindAsync(id);
-            // if (plan == null)
-            // {
-            //     return NotFound();
-            // }
-            //
-            // _context.Plan.Remove(plan);
-            // await _context.SaveChangesAsync();
-            //
-            // return NoContent();
-
-            // var plan = await GetPlan(id);
-            // if (plan == null)
-            // {
-            //     return NotFound();
-            // }
             _planRepository.Delete(id);
             return NoContent();
         }

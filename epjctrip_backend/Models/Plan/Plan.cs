@@ -21,4 +21,14 @@ public class Plan
         public int Budget { get; set; }
 
         public int UserId { get; set; }
+        
+        public decimal? TotalCo2E { get; set; }
+        
+        public string? TransportType { get; set; }
+        
+        public decimal? TransportCo2E { get; set; }
+        
+        public string? AccommodationType { get; set; }
+        
+        public decimal? AccommodationCo2E { get; set; }
 }
