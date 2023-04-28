@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'epjc-trip'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5FD3F84D124F4B99BE97025D6916E77B }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9E8D7F676D1747E3BC7A36579151F2AC }}
           package: .
